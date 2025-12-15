@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kudo Card – Cami</title>
+  <title>Mensaje – Cami</title>
   <style>
     :root{
       --bg1:#0b1020; --bg2:#111a33; --card:#0f1730cc;
@@ -124,8 +124,8 @@
   <div class="wrap">
     <div class="card">
       <header>
-        <h1>🎄 Kudo Card de Navidad</h1>
-        <div class="sub">Atrapa 12 kudos para desbloquear el mensaje secreto ✨</div>
+        <h1>🎄 Para alguien que suma todos los días </h1>
+        <div class="sub">Atrapa 12 reconocimientos 🏅 para desbloquear el mensaje secreto ✨</div>
       </header>
 
       <div class="grid">
@@ -147,7 +147,7 @@
             <h2>Juego</h2>
             <div id="game" class="game">
               <div class="hud">
-                <div>👍 <span id="score">0</span>/12</div>
+                <div>🏅 <span id="score">0</span>/12</div>
                 <div>⏱️ <span id="time">30</span>s</div>
               </div>
             </div>
@@ -192,7 +192,7 @@ Un abrazo grande hasta Canadá y muchos éxitos en esta etapa de estudio 🎄✨
       if(!running) return;
       const b = document.createElement("div");
       b.className = "bubble";
-      b.textContent = "👍";
+      b.textContent = "🏅";
       const r = game.getBoundingClientRect();
       b.style.left = Math.random() * r.width + "px";
       b.style.top = (60 + Math.random() * (r.height - 80)) + "px";
