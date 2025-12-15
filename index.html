@@ -4,24 +4,24 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mensaje – Cami</title>
+
   <style>
     :root{
       --bg1:#0b1020; --bg2:#111a33; --card:#0f1730cc;
-      --text:#eaf0ff; --muted:#b9c4ff;
-      --good:#34d399;
+      --text:#eaf0ff; --muted:#b9c4ff; --good:#34d399;
     }
     *{box-sizing:border-box}
+
     body{
       margin:0;
       min-height:100vh;
-      /* ✅ permite scroll vertical */
       overflow-x:hidden;
       background: linear-gradient(180deg, var(--bg1), var(--bg2));
       color:var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
     }
 
-    /* ❄️ CANVAS DE NIEVE */
+    /* ❄️ Nieve */
     canvas#snow{
       position:fixed;
       inset:0;
@@ -29,11 +29,10 @@
       pointer-events:none;
     }
 
-    /* ✅ centrado sin romper scroll */
     .wrap{
       width:min(980px, 94vw);
       margin:24px auto;
-      padding:0 0 32px;
+      padding-bottom:32px;
       position:relative;
       z-index:1;
     }
@@ -45,35 +44,64 @@
       box-shadow: 0 20px 60px #00000055;
       overflow:hidden;
     }
+
     header{
       padding:18px;
       background: linear-gradient(90deg, #6ee7ff1a, #a78bfa1a);
       border-bottom:1px solid #ffffff14;
     }
+
+    .header-content{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .header-logo{
+      height:26px;
+      filter: brightness(0) invert(1);
+      opacity:0.85;
+    }
+
+    .header-text{
+      display:flex;
+      flex-direction:column;
+    }
+
     h1{font-size:18px; margin:0}
     .sub{font-size:13px; color:var(--muted)}
 
     .grid{
-      display:grid; grid-template-columns: 360px 1fr;
-      gap:18px; padding:18px;
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap:18px;
+      padding:18px;
     }
-    @media (max-width: 860px){
-      .grid{grid-template-columns: 1fr}
+
+    @media (max-width:860px){
+      .grid{grid-template-columns:1fr}
     }
 
     .photo{
-      border-radius:18px; overflow:hidden;
+      border-radius:18px;
+      overflow:hidden;
       border:1px solid #ffffff18;
       background:#0b1430;
       position:relative;
       min-height:360px;
     }
     .photo img{width:100%; height:100%; object-fit:cover}
+
     .badge{
-      position:absolute; left:12px; bottom:12px;
-      padding:10px 12px; border-radius:16px;
-      background:#0b1430cc; border:1px solid #ffffff1f;
-      font-size:12px; color:var(--muted);
+      position:absolute;
+      left:12px;
+      bottom:12px;
+      padding:10px 12px;
+      border-radius:16px;
+      background:#0b1430cc;
+      border:1px solid #ffffff1f;
+      font-size:12px;
+      color:var(--muted);
       backdrop-filter: blur(8px);
     }
 
@@ -84,14 +112,20 @@
       padding:14px;
       margin-bottom:14px;
     }
-    .panel h2{margin:0 0 8px; font-size:14px; color:var(--muted)}
+    .panel h2{
+      margin:0 0 8px;
+      font-size:14px;
+      color:var(--muted);
+    }
 
     button{
       border:1px solid #ffffff24;
       background: linear-gradient(180deg, #101a3d, #0a1230);
       color:var(--text);
-      padding:10px 12px; border-radius:14px;
-      cursor:pointer; font-weight:600;
+      padding:10px 12px;
+      border-radius:14px;
+      cursor:pointer;
+      font-weight:600;
       margin-right:8px;
     }
 
@@ -103,10 +137,14 @@
       background:#08102a;
       overflow:hidden;
     }
+
     .hud{
-      position:absolute; top:10px; left:10px; right:10px;
-      display:flex; justify-content:space-between;
-      font-size:12px; color:var(--muted);
+      position:absolute;
+      top:10px; left:10px; right:10px;
+      display:flex;
+      justify-content:space-between;
+      font-size:12px;
+      color:var(--muted);
       pointer-events:none;
     }
 
@@ -114,7 +152,8 @@
       position:absolute;
       width:46px; height:46px;
       border-radius:50%;
-      display:grid; place-items:center;
+      display:grid;
+      place-items:center;
       border:1px solid #ffffff35;
       background: radial-gradient(circle at 30% 30%, #ffffff55, transparent 45%),
                   radial-gradient(circle at 70% 70%, #34d39955, #0b1430 70%);
@@ -126,7 +165,8 @@
 
     .msg{
       display:none;
-      font-size:14px; line-height:1.55;
+      font-size:14px;
+      line-height:1.55;
       background:#08102a;
       border:1px solid var(--good);
       padding:14px;
@@ -135,6 +175,7 @@
       animation: fadeIn .8s ease forwards;
     }
     .msg.show{display:block}
+
     .win{
       font-size:14px;
       color:var(--good);
@@ -152,7 +193,7 @@
       to{text-shadow:0 0 14px #34d399aa}
     }
 
-    /* 🎉 CONFETTI */
+    /* 🎉 Confetti */
     .confetti{
       position:fixed;
       width:8px; height:8px;
@@ -171,46 +212,60 @@
 </head>
 
 <body>
-  <canvas id="snow"></canvas>
 
-  <div class="wrap">
-    <div class="card">
-      <header>
-        <h1>🎄 Para alguien que suma todos los días</h1>
-        <div class="sub">Da clic en iniciar y reúne 12 reconocimientos 🏅 para descubrir el mensaje. ✨</div>
-      </header>
+<canvas id="snow"></canvas>
 
-      <div class="grid">
-        <div class="photo">
-          <img
-            src="https://media.licdn.com/dms/image/v2/D4E03AQGDuApsY1UtuQ/profile-displayphoto-crop_800_800/B4EZp5f5_oKgAM-/0/1762975000489?e=1767225600&v=beta&t=LyopKpdvckabLlzBo4vuJwTpli_GOkzPGG9ZP-Oe8y0"
-            alt="Camilo Eduardo Bellnavis en Ontario Tech University">
-          <div class="badge">📍 Ontario Tech University · Canadá</div>
+<div class="wrap">
+  <div class="card">
+
+    <header>
+      <div class="header-content">
+        <img
+          src="https://satrack.com/co/wp-content/uploads/sites/2/2022/11/logo_satrack_h.svg"
+          alt="Satrack"
+          class="header-logo"
+        />
+        <div class="header-text">
+          <h1>🎄 Para alguien que suma todos los días</h1>
+          <div class="sub">
+            Da clic en iniciar y reúne 12 reconocimientos 🏅 para descubrir el mensaje ✨
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+
+      <div class="photo">
+        <img
+          src="https://media.licdn.com/dms/image/v2/D4E03AQGDuApsY1UtuQ/profile-displayphoto-crop_800_800/B4EZp5f5_oKgAM-/0/1762975000489?e=1767225600&v=beta&t=LyopKpdvckabLlzBo4vuJwTpli_GOkzPGG9ZP-Oe8y0"
+          alt="Camilo Eduardo Bellnavis">
+        <div class="badge">📍 Ontario Tech University · Canadá</div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <h2>Controles</h2>
+          <button id="start">▶ Iniciar</button>
+          <button id="reset">↻ Reiniciar</button>
         </div>
 
-        <div>
-          <div class="panel">
-            <h2>Controles</h2>
-            <button id="start">▶ Iniciar</button>
-            <button id="reset">↻ Reiniciar</button>
-          </div>
-
-          <div class="panel">
-            <h2>Juego</h2>
-            <div id="game" class="game">
-              <div class="hud">
-                <div>🏅 <span id="score">0</span>/12</div>
-                <div>⏱️ <span id="time">30</span>s</div>
-              </div>
+        <div class="panel">
+          <h2>Juego</h2>
+          <div id="game" class="game">
+            <div class="hud">
+              <div>🏅 <span id="score">0</span>/12</div>
+              <div>⏱️ <span id="time">30</span>s</div>
             </div>
           </div>
+        </div>
 
-          <div class="panel" id="messagePanel">
-            <h2>Mensaje</h2>
-            <div id="unlockText" class="win" style="display:none">
-              🎉 Este reconocimiento es para ti
-            </div>
-            <div id="message" class="msg">
+        <div class="panel" id="messagePanel">
+          <h2>Mensaje</h2>
+          <div id="unlockText" class="win" style="display:none">
+            🎉 Este reconocimiento es para ti
+          </div>
+          <div id="message" class="msg">
 Camilo,
 
 En esta Navidad quería reconocerte por tu compromiso, tu respeto y tu disposición constante para apoyar, incluso a la distancia.
@@ -220,23 +275,24 @@ Gracias por hacer que el trabajo en equipo sea más humano y más llevadero.
 Un abrazo grande hasta Canadá y muchos éxitos en esta etapa de estudio 🎄✨
 
 — Ingrid
-            </div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
+</div>
 
 <script>
-/* ❄️ NIEVE */
-const canvas = document.getElementById("snow");
-const ctx = canvas.getContext("2d");
-let w, h, flakes=[];
+/* ❄️ Nieve */
+const canvas=document.getElementById("snow");
+const ctx=canvas.getContext("2d");
+let w,h,flakes=[];
 function resize(){
-  w = canvas.width = window.innerWidth;
-  h = canvas.height = window.innerHeight;
+  w=canvas.width=window.innerWidth;
+  h=canvas.height=window.innerHeight;
 }
-window.addEventListener("resize", resize);
+window.addEventListener("resize",resize);
 resize();
 for(let i=0;i<80;i++){
   flakes.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*2+1,s:Math.random()+0.3});
@@ -255,7 +311,7 @@ function snow(){
 }
 snow();
 
-/* 🎮 JUEGO + 🎉 CONFETTI */
+/* 🎮 Juego + 🎉 Confetti */
 const TARGET=12;
 let score=0,time=30,running=false,spawn,timer;
 const game=document.getElementById("game");
@@ -268,12 +324,15 @@ const messagePanel=document.getElementById("messagePanel");
 function spawnBubble(){
   if(!running) return;
   const b=document.createElement("div");
-  b.className="bubble"; b.textContent="🏅";
+  b.className="bubble";
+  b.textContent="🏅";
   const r=game.getBoundingClientRect();
   b.style.left=Math.random()*r.width+"px";
   b.style.top=(60+Math.random()*(r.height-80))+"px";
   b.onclick=()=>{
-    b.remove(); score++; scoreEl.textContent=score;
+    b.remove();
+    score++;
+    scoreEl.textContent=score;
     if(score>=TARGET) win();
   };
   game.appendChild(b);
@@ -286,7 +345,6 @@ function confetti(){
     c.className="confetti";
     c.style.left=Math.random()*100+"vw";
     c.style.background=["gold","#34d399","#6ee7ff","#ffffff"][Math.floor(Math.random()*4)];
-    c.style.transform = `rotate(${Math.random()*180}deg)`;
     document.body.appendChild(c);
     setTimeout(()=>c.remove(),2500);
   }
@@ -295,26 +353,22 @@ function confetti(){
 function win(){
   running=false;
   clearInterval(spawn); clearInterval(timer);
-
   unlockText.style.display="block";
   msg.classList.add("show");
   confetti();
-
-  // ✅ baja automáticamente al mensaje para que se vea
-  setTimeout(() => {
-    messagePanel.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, 150);
+  setTimeout(()=>{
+    messagePanel.scrollIntoView({behavior:"smooth", block:"start"});
+  },150);
 }
 
 document.getElementById("start").onclick=()=>{
   if(running) return;
   running=true; score=0; time=30;
-  scoreEl.textContent=score; timeEl.textContent=time;
-  msg.classList.remove("show"); unlockText.style.display="none";
-
-  // limpia burbujas previas por si reinicia sin recargar
-  [...game.querySelectorAll(".bubble")].forEach(x=>x.remove());
-
+  scoreEl.textContent=score;
+  timeEl.textContent=time;
+  msg.classList.remove("show");
+  unlockText.style.display="none";
+  [...game.querySelectorAll(".bubble")].forEach(b=>b.remove());
   spawn=setInterval(spawnBubble,500);
   timer=setInterval(()=>{
     time--; timeEl.textContent=time;
@@ -324,7 +378,9 @@ document.getElementById("start").onclick=()=>{
     }
   },1000);
 };
+
 document.getElementById("reset").onclick=()=>location.reload();
 </script>
+
 </body>
 </html>
