@@ -7,19 +7,27 @@
   <style>
     :root{
       --bg1:#0b1020; --bg2:#111a33; --card:#0f1730cc;
-      --text:#eaf0ff; --muted:#b9c4ff; --accent:#6ee7ff; --accent2:#a78bfa;
+      --text:#eaf0ff; --muted:#b9c4ff;
       --good:#34d399;
     }
     *{box-sizing:border-box}
     body{
       margin:0; min-height:100vh; display:grid; place-items:center;
-      background: radial-gradient(900px 500px at 20% 10%, #1b2a6b55, transparent 60%),
-                  radial-gradient(700px 500px at 80% 30%, #7c3aed33, transparent 60%),
-                  linear-gradient(180deg, var(--bg1), var(--bg2));
+      background: linear-gradient(180deg, var(--bg1), var(--bg2));
       color:var(--text);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      overflow:hidden;
     }
-    .wrap{width:min(980px, 94vw); padding:24px}
+
+    /* ❄️ CANVAS DE NIEVE */
+    canvas#snow{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+    }
+
+    .wrap{width:min(980px, 94vw); padding:24px; position:relative; z-index:1}
     .card{
       border:1px solid #ffffff1f;
       background: linear-gradient(180deg, #0f1730e6, #0a1024e6);
@@ -34,6 +42,7 @@
     }
     h1{font-size:18px; margin:0}
     .sub{font-size:13px; color:var(--muted)}
+
     .grid{
       display:grid; grid-template-columns: 360px 1fr;
       gap:18px; padding:18px;
@@ -41,6 +50,7 @@
     @media (max-width: 860px){
       .grid{grid-template-columns: 1fr}
     }
+
     .photo{
       border-radius:18px; overflow:hidden;
       border:1px solid #ffffff18;
@@ -48,16 +58,15 @@
       position:relative;
       min-height:360px;
     }
-    .photo img{
-      width:100%; height:100%; object-fit:cover; display:block;
-    }
+    .photo img{width:100%; height:100%; object-fit:cover}
     .badge{
       position:absolute; left:12px; bottom:12px;
       padding:10px 12px; border-radius:16px;
       background:#0b1430cc; border:1px solid #ffffff1f;
-      backdrop-filter: blur(8px);
       font-size:12px; color:var(--muted);
+      backdrop-filter: blur(8px);
     }
+
     .panel{
       border:1px solid #ffffff18;
       border-radius:18px;
@@ -66,15 +75,16 @@
       margin-bottom:14px;
     }
     .panel h2{margin:0 0 8px; font-size:14px; color:var(--muted)}
+
     button{
       border:1px solid #ffffff24;
       background: linear-gradient(180deg, #101a3d, #0a1230);
       color:var(--text);
       padding:10px 12px; border-radius:14px;
-      cursor:pointer;
-      font-weight:600;
+      cursor:pointer; font-weight:600;
       margin-right:8px;
     }
+
     .game{
       position:relative;
       border-radius:18px;
@@ -89,6 +99,7 @@
       font-size:12px; color:var(--muted);
       pointer-events:none;
     }
+
     .bubble{
       position:absolute;
       width:46px; height:46px;
@@ -96,11 +107,12 @@
       display:grid; place-items:center;
       border:1px solid #ffffff35;
       background: radial-gradient(circle at 30% 30%, #ffffff55, transparent 45%),
-                  radial-gradient(circle at 70% 70%, #6ee7ff55, #a78bfa33 60%, #0b1430 100%);
+                  radial-gradient(circle at 70% 70%, #34d39955, #0b1430 70%);
       cursor:pointer;
       font-size:20px;
       transform: translate(-50%, -50%);
     }
+
     .msg{
       display:none;
       font-size:14px; line-height:1.55;
@@ -109,6 +121,7 @@
       padding:14px;
       border-radius:16px;
       white-space:pre-wrap;
+      animation: fadeIn .8s ease forwards;
     }
     .msg.show{display:block}
     .win{
@@ -116,23 +129,50 @@
       color:var(--good);
       margin-bottom:10px;
       font-weight:600;
+      animation: glow 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0; transform:translateY(6px)}
+      to{opacity:1; transform:none}
+    }
+    @keyframes glow{
+      from{text-shadow:0 0 6px #34d39955}
+      to{text-shadow:0 0 14px #34d399aa}
+    }
+
+    /* 🎉 CONFETTI */
+    .confetti{
+      position:fixed;
+      width:8px; height:8px;
+      background:gold;
+      top:-10px;
+      animation: fall 2.5s linear forwards;
+      z-index:2;
+      pointer-events:none;
+    }
+    @keyframes fall{
+      to{
+        transform: translateY(110vh) rotate(360deg);
+        opacity:0;
+      }
     }
   </style>
 </head>
 
 <body>
+  <canvas id="snow"></canvas>
+
   <div class="wrap">
     <div class="card">
       <header>
-        <h1>🎄 Para alguien que suma todos los días </h1>
-        <div class="sub">Atrapa 12 reconocimientos 🏅 para desbloquear el mensaje secreto ✨</div>
+        <h1>🎄 Para alguien que suma todos los días</h1>
+        <div class="sub">Reúne 12 reconocimientos 🏅 y descubre un mensaje hecho con cariño ✨</div>
       </header>
 
       <div class="grid">
         <div class="photo">
-          <img
-            src="https://media.licdn.com/dms/image/v2/D4E03AQGDuApsY1UtuQ/profile-displayphoto-crop_800_800/B4EZp5f5_oKgAM-/0/1762975000489?e=1767225600&v=beta&t=LyopKpdvckabLlzBo4vuJwTpli_GOkzPGG9ZP-Oe8y0"
-            alt="Camilo Eduardo Bellnavis en Ontario Tech University">
+          <img src="https://media.licdn.com/dms/image/v2/D4E03AQGDuApsY1UtuQ/profile-displayphoto-crop_800_800/B4EZp5f5_oKgAM-/0/1762975000489?e=1767225600&v=beta&t=LyopKpdvckabLlzBo4vuJwTpli_GOkzPGG9ZP-Oe8y0">
           <div class="badge">📍 Ontario Tech University · Canadá</div>
         </div>
 
@@ -156,7 +196,7 @@
           <div class="panel">
             <h2>Mensaje</h2>
             <div id="unlockText" class="win" style="display:none">
-              🎉 ¡Nivel superado! Has desbloqueado el mensaje:
+              🎉 Este reconocimiento es para ti
             </div>
             <div id="message" class="msg">
 Camilo,
@@ -175,65 +215,89 @@ Un abrazo grande hasta Canadá y muchos éxitos en esta etapa de estudio 🎄✨
     </div>
   </div>
 
-  <script>
-    const TARGET = 12;
-    let score = 0;
-    let time = 30;
-    let running = false;
-    let spawn, timer;
+<script>
+/* ❄️ NIEVE */
+const canvas = document.getElementById("snow");
+const ctx = canvas.getContext("2d");
+let w, h, flakes=[];
+function resize(){
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+window.onresize = resize;
+resize();
+for(let i=0;i<80;i++){
+  flakes.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*2+1,s:Math.random()+0.3});
+}
+function snow(){
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle="rgba(255,255,255,0.6)";
+  flakes.forEach(f=>{
+    ctx.beginPath();
+    ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
+    ctx.fill();
+    f.y+=f.s;
+    if(f.y>h){f.y=-5; f.x=Math.random()*w}
+  });
+  requestAnimationFrame(snow);
+}
+snow();
 
-    const game = document.getElementById("game");
-    const scoreEl = document.getElementById("score");
-    const timeEl = document.getElementById("time");
-    const msg = document.getElementById("message");
-    const unlockText = document.getElementById("unlockText");
+/* 🎮 JUEGO + 🎉 CONFETTI */
+const TARGET=12;
+let score=0,time=30,running=false,spawn,timer;
+const game=document.getElementById("game");
+const scoreEl=document.getElementById("score");
+const timeEl=document.getElementById("time");
+const msg=document.getElementById("message");
+const unlockText=document.getElementById("unlockText");
 
-    function spawnBubble(){
-      if(!running) return;
-      const b = document.createElement("div");
-      b.className = "bubble";
-      b.textContent = "🏅";
-      const r = game.getBoundingClientRect();
-      b.style.left = Math.random() * r.width + "px";
-      b.style.top = (60 + Math.random() * (r.height - 80)) + "px";
-      b.onclick = () => {
-        b.remove();
-        score++;
-        scoreEl.textContent = score;
-        if(score >= TARGET) win();
-      };
-      game.appendChild(b);
-      setTimeout(()=>b.remove(), 1200);
-    }
+function spawnBubble(){
+  if(!running) return;
+  const b=document.createElement("div");
+  b.className="bubble"; b.textContent="🏅";
+  const r=game.getBoundingClientRect();
+  b.style.left=Math.random()*r.width+"px";
+  b.style.top=(60+Math.random()*(r.height-80))+"px";
+  b.onclick=()=>{
+    b.remove(); score++; scoreEl.textContent=score;
+    if(score>=TARGET) win();
+  };
+  game.appendChild(b);
+  setTimeout(()=>b.remove(),1200);
+}
 
-    function win(){
-      running = false;
-      clearInterval(spawn);
-      clearInterval(timer);
-      unlockText.style.display = "block";
-      msg.classList.add("show");
-    }
+function confetti(){
+  for(let i=0;i<40;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=["gold","#34d399","#6ee7ff"][Math.floor(Math.random()*3)];
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),2500);
+  }
+}
 
-    document.getElementById("start").onclick = () => {
-      if(running) return;
-      running = true;
-      score = 0; time = 30;
-      scoreEl.textContent = score;
-      timeEl.textContent = time;
-      msg.classList.remove("show");
-      unlockText.style.display = "none";
-      spawn = setInterval(spawnBubble, 500);
-      timer = setInterval(()=>{
-        time--; timeEl.textContent = time;
-        if(time<=0){
-          running=false;
-          clearInterval(spawn);
-          clearInterval(timer);
-        }
-      },1000);
-    };
+function win(){
+  running=false;
+  clearInterval(spawn); clearInterval(timer);
+  unlockText.style.display="block";
+  msg.classList.add("show");
+  confetti();
+}
 
-    document.getElementById("reset").onclick = () => location.reload();
-  </script>
+document.getElementById("start").onclick=()=>{
+  if(running) return;
+  running=true; score=0; time=30;
+  scoreEl.textContent=score; timeEl.textContent=time;
+  msg.classList.remove("show"); unlockText.style.display="none";
+  spawn=setInterval(spawnBubble,500);
+  timer=setInterval(()=>{
+    time--; timeEl.textContent=time;
+    if(time<=0){running=false; clearInterval(spawn); clearInterval(timer);}
+  },1000);
+};
+document.getElementById("reset").onclick=()=>location.reload();
+</script>
 </body>
 </html>
