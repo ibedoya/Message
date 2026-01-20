@@ -2,378 +2,604 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mensaje – Cami</title>
-   <div class="footer-logo">
-  <img
-    src="https://satrack.com/co/wp-content/uploads/sites/2/2022/11/logo_satrack_h.svg"
-    alt="Satrack"
-  />
-</div>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Línea de Tiempo de Sprints: Proyecto Rangers</title>
+ <style>
+  :root{
+    --bg:#f7f5f4;
+    --ink:#1b1b1f;
+    --muted:#6c6c78;
 
-  <style>
-    :root{
-      --bg1:#0b1020; --bg2:#111a33; --card:#0f1730cc;
-      --text:#eaf0ff; --muted:#b9c4ff; --good:#34d399;
+    --c-orange:#e07a2f;
+    --c-green:#4e8b3a;
+    --c-blue:#3a73c2;
+    --c-purple:#5c4aa8;
+
+    --shadow:0 8px 18px rgba(0,0,0,.08);
+    --w:980px;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+  }
+
+  .wrap{
+    max-width: var(--w);
+    margin: 24px auto 40px;
+    padding: 10px 18px 28px;
+  }
+
+  .title{
+    text-align:center;
+    font-weight:800;
+    letter-spacing:.2px;
+    font-size: 30px;
+    margin: 8px 0 18px;
+  }
+  .title span{font-weight:500}
+
+  .divider{
+    height:2px;
+    background: rgba(0,0,0,.18);
+    margin: 0 10px 14px;
+  }
+
+  .timeline{
+    position: relative;
+    padding-left: 22px;
+  }
+
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left: 12px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(88,55,35,.55);
+    border-radius: 2px;
+  }
+
+  .row{
+    /* Nota: si quieres que los puntos se posicionen bien, activa position:relative; */
+    
+    display:grid;
+    grid-template-columns: 165px 1fr;
+    gap: 12px;
+    margin: 10px 0;
+    align-items: stretch;
+  }
+
+  .row::before{
+    content:"";
+    position:absolute;
+    left: 8px;
+    top: 18px;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border: 2px solid rgba(88,55,35,.75);
+    border-radius: 50%;
+    z-index: 2;
+  }
+
+  .row::after{
+    content:"";
+    position:absolute;
+    left: 14px;
+    top: 22px;
+    width: 18px;
+    height: 2px;
+    background: rgba(88,55,35,.55);
+    z-index:1;
+  }
+
+  .left-pill{
+    width: 165px;
+    display:flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 8px;
+  }
+
+  .sprint-pill{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding: 7px 14px;
+    border-radius: 14px;
+    font-weight: 800;
+    color: #fff;
+    font-size: 16px;
+    min-width: 110px;
+    box-shadow: 0 5px 12px rgba(0,0,0,.10);
+  }
+
+  .date{
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.2;
+    padding-left: 6px;
+  }
+
+  .card{
+    width: 100%;
+    border-radius: 16px;
+    padding: 10px 14px;
+    box-shadow: var(--shadow);
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    min-height: 62px;
+    border: 1px solid rgba(0,0,0,.06);
+    backdrop-filter: blur(2px);
+    gap: 12px;
+  }
+
+  .main{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .icons{
+    display:flex;
+    gap: 6px;
+    align-items:center;
+    flex: 0 0 auto;
+    opacity:.95;
+  }
+
+  .icon{
+    width: 26px;
+    height: 26px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius: 8px;
+    background: rgba(255,255,255,.75);
+    border: 1px solid rgba(0,0,0,.08);
+    font-size: 16px;
+  }
+
+  .text{
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.25;
+
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: unset;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+
+    min-width: 0;
+  }
+
+  .chips{
+    display:flex;
+    gap: 8px;
+    align-items:center;
+    flex-wrap: wrap;
+    justify-content:flex-end;
+    flex: 0 0 auto;
+    max-width: 280px;
+    margin-left: 10px;
+  }
+
+  .chip{
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 800;
+    color: #fff;
+    font-size: 13px;
+    box-shadow: 0 5px 12px rgba(0,0,0,.10);
+    white-space: nowrap;
+  }
+
+  .orange{ background: var(--c-orange); }
+  .green { background: var(--c-green); }
+  .blue  { background: var(--c-blue); }
+  .purple{ background: var(--c-purple); }
+
+  .tint-orange{ background: rgba(224,122,47,.12); }
+  .tint-green { background: rgba(78,139,58,.12); }
+  .tint-blue  { background: rgba(58,115,194,.12); }
+  .tint-purple{ background: rgba(92,74,168,.12); }
+
+  @media (max-width: 980px){
+    .wrap{max-width: 100%;}
+    .chips{max-width: 240px;}
+  }
+
+  @media (max-width: 740px){
+    .row{
+      grid-template-columns: 1fr;
+      padding-left: 14px;
     }
-    *{box-sizing:border-box}
-
-    body{
-      margin:0;
-      min-height:100vh;
-      overflow-x:hidden;
-      background: linear-gradient(180deg, var(--bg1), var(--bg2));
-      color:var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    .left-pill{
+      width:auto;
+      padding-left: 0;
     }
-
-    /* ❄️ Nieve */
-    canvas#snow{
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-    }
-
-    .wrap{
-      width:min(980px, 94vw);
-      margin:24px auto;
-      padding-bottom:32px;
-      position:relative;
-      z-index:1;
-    }
-
+    .timeline{padding-left: 14px;}
+    .timeline::before{left: 6px;}
+    .row::before{left: 2px;}
+    .row::after{left: 8px; width: 10px;}
     .card{
-      border:1px solid #ffffff1f;
-      background: linear-gradient(180deg, #0f1730e6, #0a1024e6);
-      border-radius:24px;
-      box-shadow: 0 20px 60px #00000055;
-      overflow:hidden;
+      flex-wrap: wrap;
+      gap: 10px;
     }
+    .chips{
+      max-width: 100%;
+      justify-content:flex-start;
+      margin-left: 0;
+    }
+    .text{
+      -webkit-line-clamp: 3;
+    }
+  }
+</style>
 
-    header{
-      padding:18px;
-      background: linear-gradient(90deg, #6ee7ff1a, #a78bfa1a);
-      border-bottom:1px solid #ffffff14;
-    }
-
-    h1{font-size:18px; margin:0}
-    .sub{font-size:13px; color:var(--muted)}
-
-    .grid{
-      display:grid;
-      grid-template-columns: 360px 1fr;
-      gap:18px;
-      padding:18px;
-    }
-
-    @media (max-width:860px){
-      .grid{grid-template-columns:1fr}
-    }
-
-    .photo{
-      border-radius:18px;
-      overflow:hidden;
-      border:1px solid #ffffff18;
-      background:#0b1430;
-      position:relative;
-      min-height:360px;
-    }
-    .photo img{width:100%; height:100%; object-fit:cover}
-
-    .badge{
-      position:absolute;
-      left:12px;
-      bottom:12px;
-      padding:10px 12px;
-      border-radius:16px;
-      background:#0b1430cc;
-      border:1px solid #ffffff1f;
-      font-size:12px;
-      color:var(--muted);
-      backdrop-filter: blur(8px);
-    }
-
-    .panel{
-      border:1px solid #ffffff18;
-      border-radius:18px;
-      background: var(--card);
-      padding:14px;
-      margin-bottom:14px;
-    }
-    .panel h2{
-      margin:0 0 8px;
-      font-size:14px;
-      color:var(--muted);
-    }
-
-    button{
-      border:1px solid #ffffff24;
-      background: linear-gradient(180deg, #101a3d, #0a1230);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
-      cursor:pointer;
-      font-weight:600;
-      margin-right:8px;
-    }
-
-    .game{
-      position:relative;
-      border-radius:18px;
-      border:1px dashed #ffffff2a;
-      height:260px;
-      background:#08102a;
-      overflow:hidden;
-    }
-
-    .hud{
-      position:absolute;
-      top:10px; left:10px; right:10px;
-      display:flex;
-      justify-content:space-between;
-      font-size:12px;
-      color:var(--muted);
-      pointer-events:none;
-    }
-
-    .bubble{
-      position:absolute;
-      width:46px; height:46px;
-      border-radius:50%;
-      display:grid;
-      place-items:center;
-      border:1px solid #ffffff35;
-      background: radial-gradient(circle at 30% 30%, #ffffff55, transparent 45%),
-                  radial-gradient(circle at 70% 70%, #34d39955, #0b1430 70%);
-      cursor:pointer;
-      font-size:20px;
-      transform: translate(-50%, -50%);
-      user-select:none;
-    }
-
-    .msg{
-      display:none;
-      font-size:14px;
-      line-height:1.55;
-      background:#08102a;
-      border:1px solid var(--good);
-      padding:14px;
-      border-radius:16px;
-      white-space:pre-wrap;
-      animation: fadeIn .8s ease forwards;
-    }
-    .msg.show{display:block}
-
-    .win{
-      font-size:14px;
-      color:var(--good);
-      margin-bottom:10px;
-      font-weight:600;
-      animation: glow 1.2s ease-in-out infinite alternate;
-    }
-
-    @keyframes fadeIn{
-      from{opacity:0; transform:translateY(6px)}
-      to{opacity:1; transform:none}
-    }
-    @keyframes glow{
-      from{text-shadow:0 0 6px #34d39955}
-      to{text-shadow:0 0 14px #34d399aa}
-    }
-
-    /* 🎉 Confetti */
-    .confetti{
-      position:fixed;
-      width:8px; height:8px;
-      top:-10px;
-      animation: fall 2.5s linear forwards;
-      z-index:2;
-      pointer-events:none;
-    }
-    @keyframes fall{
-      to{
-        transform: translateY(110vh) rotate(360deg);
-        opacity:0;
-      }
-    }
-    .footer-logo{
-  margin-top:16px;
-  display:flex;
-  justify-content:center;
-  
-}
-.footer-logo img{
-  height:220px;
-  background-color: white;
-  
-}
-
-  </style>
 </head>
 
 <body>
+  <div class="wrap">
+    <div class="title">Línea de Tiempo de Sprints: <span>Proyecto Rangers</span></div>
+    <div class="divider"></div>
 
-<canvas id="snow"></canvas>
+   <div class="timeline">
 
-<div class="wrap">
-  <div class="card">
-
-    <header>
-      
-      <h1>🎄 Para alguien que suma todos los días</h1>
-      <div class="sub">
-        Da clic en iniciar y reúne 12 reconocimientos 🏅 para descubrir el mensaje ✨
+  <!-- Sprint 1 -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill orange">Sprint 1</div>
+      <div class="date">20 de enero – 11 de febrero 2025</div>
+    </div>
+    <div class="card tint-orange">
+      <div class="main">
+        <div class="icons"><span class="icon">⚙️</span><span class="icon">🔍</span></div>
+        <div class="text">Wizard de alarmas (Paso 1) y filtros de alarma. Construcción de componentes base, búsqueda y bandeja de alarmas.</div>
       </div>
-    </header>
-
-    <div class="grid">
-
-      <div class="photo">
-        <img
-          src="https://media.licdn.com/dms/image/v2/D4E03AQGDuApsY1UtuQ/profile-displayphoto-crop_800_800/B4EZp5f5_oKgAM-/0/1762975000489?e=1767225600&v=beta&t=LyopKpdvckabLlzBo4vuJwTpli_GOkzPGG9ZP-Oe8y0"
-          alt="Camilo Eduardo Bellnavis">
-        <div class="badge">📍 Ontario Tech University · Canadá</div>
+      <div class="chips">
+        <span class="chip orange">Carlos Daniel</span>
+        <span class="chip orange">LT (Jhon Alexander)</span>
       </div>
+    </div>
+  </div>
 
-      <div>
-        <div class="panel">
-          <h2>Controles</h2>
-          <button id="start">▶ Iniciar</button>
-          <button id="reset">↻ Reiniciar</button>
-        </div>
-
-        <div class="panel">
-          <h2>Juego</h2>
-          <div id="game" class="game">
-            <div class="hud">
-              <div>🏅 <span id="score">0</span>/12</div>
-              <div>⏱️ <span id="time">30</span>s</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel" id="messagePanel">
-          <h2>Mensaje</h2>
-          <div id="unlockText" class="win" style="display:none">
-            🎉 Este reconocimiento es para ti
-          </div>
-          <div id="message" class="msg">
-Camilo,
-
-En esta Navidad quería reconocerte por tu compromiso, respeto y disposición constante para apoyar, incluso a la distancia.
-Se nota el juicio y la dedicación que le pones a todo, tanto en el sistema de diseño como en el equipo de IA y en los proyectos que participas.
-
-Eres una de esas personas que todos sus compañeros reconocen, Gracias por hacer que el trabajo en equipo sea más humano y más llevadero.
-Un abrazo grande hasta Canadá y muchos éxitos en esta etapa de estudio 🎄✨
-
-— Ingrid
-          </div>
-        </div>
+  <!-- Sprint 2 -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill orange">Sprint 2</div>
+      <div class="date">12 de febrero – 04 de marzo 2025</div>
+    </div>
+    <div class="card tint-orange">
+      <div class="main">
+        <div class="icons"><span class="icon">🚗</span><span class="icon">🧪</span></div>
+        <div class="text">Paso 2 del wizard: selección de vehículos y grupos. Mejoras en validaciones y experiencia ante búsquedas sin resultados. Spikes de análisis de reglas, dashboards y UserSnap.</div>
       </div>
+      <div class="chips">
+        <span class="chip orange">Carlos Daniel</span>
+        <span class="chip orange">LT (Jhon Alexander)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 3 -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill orange">Sprint 3</div>
+      <div class="date">05 de marzo – 25 de marzo 2025</div>
+    </div>
+    <div class="card tint-orange">
+      <div class="main">
+        <div class="icons"><span class="icon">🗺️</span><span class="icon">⏱️</span></div>
+        <div class="text">Selección de regiones (Latam, Cenam, USA) y configuración de horarios. Integración de preferencias de usuario y encuestas UserSnap. Correcciones de usabilidad y bugs.</div>
+      </div>
+      <div class="chips">
+        <span class="chip orange">Carlos Daniel</span>
+        <span class="chip orange">LT (Jhon Alexander)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 4 -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill orange">Sprint 4</div>
+      <div class="date">26 de marzo – 15 de abril 2025</div>
+    </div>
+    <div class="card tint-orange">
+      <div class="main">
+        <div class="icons"><span class="icon">🔔</span><span class="icon">📱</span></div>
+        <div class="text">Configuración de usuarios para notificaciones y canales Web/App. Soporte para usuarios externos (Latam/Cenam/USA). Implementación de CSAT para USA.</div>
+      </div>
+      <div class="chips">
+        <span class="chip orange">Carlos Daniel</span>
+        <span class="chip orange">LT (Jhon Alexander)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 5 -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill green">Sprint 5</div>
+      <div class="date">16 de abril – 06 de mayo 2025</div>
+    </div>
+    <div class="card tint-green">
+      <div class="main">
+        <div class="icons"><span class="icon">🧾</span><span class="icon">✨</span></div>
+        <div class="text">Pantalla de resumen antes de guardar alarmas. Edición de usuarios de notificación y ajustes de validación. Mejoras de diseño y UX.</div>
+      </div>
+      <div class="chips">
+        <span class="chip green">Carlos Daniel</span>
+        <span class="chip green">LT (Jhon Alexander)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 6 (con despliegue: incluir 📦) -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill green">Sprint 6</div>
+      <div class="date">07 de mayo – 27 de mayo 2025</div>
+    </div>
+    <div class="card tint-green">
+      <div class="main">
+        <div class="icons"><span class="icon">📦</span><span class="icon">🧪</span></div>
+        <div class="text">Guardado de alarmas y menú de gestión. Compilaciones, merges con master y pruebas en Android/iOS/Huawei. Despliegue: Primer release funcional del configurador de alarmas.</div>
+      </div>
+      <div class="chips">
+        <span class="chip green">Carlos Daniel</span>
+        <span class="chip green">LT (Jhon Alexander)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 7 -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill green">Sprint 7</div>
+      <div class="date">28 de mayo – 17 de junio 2025</div>
+    </div>
+    <div class="card tint-green">
+      <div class="main">
+        <div class="icons"><span class="icon">🧭</span><span class="icon">✨</span></div>
+        <div class="text">Onboarding beta y mejoras de UI en listado/detalle. Gestión de alarmas y fortalecimiento de trazabilidad.</div>
+      </div>
+      <div class="chips">
+        <span class="chip green">Carlos Daniel</span>
+        <span class="chip green">LT (Jhon Alexander)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 8 -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill green">Sprint 8</div>
+      <div class="date">18 de junio – 08 de julio 2025</div>
+    </div>
+    <div class="card tint-green">
+      <div class="main">
+        <div class="icons"><span class="icon">🛠️</span><span class="icon">✅</span></div>
+        <div class="text">Corrección de bugs críticos y mejoras de UX. Automatización con IDs faltantes del configurador. Estabilización del beta.</div>
+      </div>
+      <div class="chips">
+        <span class="chip green">Carlos Daniel</span>
+        <span class="chip green">LT (Jhon Alexander)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 9 (con despliegue: incluir 📦) -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill blue">Sprint 9</div>
+      <div class="date">09 de julio – 30 de julio 2025</div>
+    </div>
+    <div class="card tint-blue">
+      <div class="main">
+        <div class="icons"><span class="icon">📦</span><span class="icon">🌐</span></div>
+        <div class="text">Ajustes masivos de traducciones al inglés (Sprints 1–7 + Onboarding). Ruta crítica de despliegue beta y pruebas multi-dispositivo. Despliegue: Lanzamiento Beta oficial para USA.</div>
+      </div>
+      <div class="chips">
+        <span class="chip blue">Anderson</span>
+        <span class="chip blue">Felipe</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 10 (con despliegue: incluir 📦) -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill blue">Sprint 10</div>
+      <div class="date">31 de julio – 19 de agosto 2025</div>
+    </div>
+    <div class="card tint-blue">
+      <div class="main">
+        <div class="icons"><span class="icon">📦</span><span class="icon">📊</span></div>
+        <div class="text">Edición de alarmas y tracking de uso. Corrección de bugs críticos y generación de versiones/APK. Despliegue: Release de estabilización post-Beta.</div>
+      </div>
+      <div class="chips">
+        <span class="chip blue">Anderson</span>
+        <span class="chip blue">Felipe</span>
+        <span class="chip blue">LT (Jaiver)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 11 -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill blue">Sprint 11</div>
+      <div class="date">20 de agosto – 09 de septiembre 2025</div>
+    </div>
+    <div class="card tint-blue">
+      <div class="main">
+        <div class="icons"><span class="icon">🧩</span><span class="icon">🔔</span></div>
+        <div class="text">Wizard completo de creación/edición de alarmas. Spikes de notificaciones push y suscripciones masivas. Estabilización funcional.</div>
+      </div>
+      <div class="chips">
+        <span class="chip blue">Anderson</span>
+        <span class="chip blue">Felipe</span>
+        <span class="chip blue">LT (Jaiver)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 12 -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill blue">Sprint 12</div>
+      <div class="date">10 de septiembre – 23 de septiembre 2025</div>
+    </div>
+    <div class="card tint-blue">
+      <div class="main">
+        <div class="icons"><span class="icon">🔐</span><span class="icon">⚙️</span></div>
+        <div class="text">Gestión de acceso beta (HU: 124125). Estrategias de despliegue por tiendas no funcionaron, se implementó solución directa en código. Optimización de rendimiento, accesibilidad y validaciones. Corrección de errores críticos en Android, iOS y Huawei.</div>
+      </div>
+      <div class="chips">
+        <span class="chip blue">Anderson</span>
+        <span class="chip blue">Felipe</span>
+        <span class="chip blue">LT (Jaiver)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 13 -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill blue">Sprint 13</div>
+      <div class="date">24 de septiembre – 14 de octubre 2025</div>
+    </div>
+    <div class="card tint-blue">
+      <div class="main">
+        <div class="icons"><span class="icon">🧹</span><span class="icon">🧱</span></div>
+        <div class="text">Mejoras en edición y guardado de alarmas. Eliminación transversal de alarmas y spikes técnicos. Refactorización y QA intensivo.</div>
+      </div>
+      <div class="chips">
+        <span class="chip blue">Anderson</span>
+        <span class="chip blue">Felipe</span>
+        <span class="chip blue">LT (Jaiver)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 14 (con despliegue: incluir 📦) -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill purple">Sprint 14</div>
+      <div class="date">15 de octubre – 04 de noviembre 2025</div>
+    </div>
+    <div class="card tint-purple">
+      <div class="main">
+        <div class="icons"><span class="icon">📦</span><span class="icon">⚠️</span></div>
+        <div class="text">Implementación de alertas de mala instalación. Backend, notificaciones push y sincronizadores. QA y regresión intensiva. Despliegue: Features mayores (Excesos de Velocidad + Alertas de mala instalación).</div>
+      </div>
+      <div class="chips">
+        <span class="chip purple">Anderson</span>
+        <span class="chip purple">Felipe</span>
+        <span class="chip purple">Daniel</span>
+        <span class="chip purple">LT (Jaiver)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 15 -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill purple">Sprint 15</div>
+      <div class="date">05 de noviembre – 25 de noviembre 2025</div>
+    </div>
+    <div class="card tint-purple">
+      <div class="main">
+        <div class="icons"><span class="icon">🌎</span><span class="icon">🔔</span></div>
+        <div class="text">Edición de alarmas USA/Latam y gestión de canales. Integración backend y pruebas intensivas.</div>
+      </div>
+      <div class="chips">
+        <span class="chip purple">Anderson</span>
+        <span class="chip purple">Felipe</span>
+        <span class="chip purple">Daniel</span>
+        <span class="chip purple">LT (Jaiver)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 16 (con despliegue: incluir 📦) -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill purple">Sprint 16</div>
+      <div class="date">26 de noviembre – 18 de diciembre 2025</div>
+    </div>
+    <div class="card tint-purple">
+      <div class="main">
+        <div class="icons"><span class="icon">📦</span><span class="icon">📱</span></div>
+        <div class="text">Implementación de alertas de mala instalación en App y Web. Correcciones críticas, SonarQube y QA. Despliegue: Release productivo en Play Store, App Store y AppGallery.</div>
+      </div>
+      <div class="chips">
+        <span class="chip purple">Anderson</span>
+        <span class="chip purple">Felipe</span>
+        <span class="chip purple">Daniel</span>
+        <span class="chip purple">LT (Jaiver)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 17 (con despliegue: incluir 📦) -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill purple">Sprint 17</div>
+      <div class="date">19 de diciembre 2025 – 06 de enero 2026</div>
+    </div>
+    <div class="card tint-purple">
+      <div class="main">
+        <div class="icons"><span class="icon">📦</span><span class="icon">🇺🇸</span></div>
+        <div class="text">Depuración de alarmas huérfanas. Activación del configurador para nuevas compañías USA. Bug Bash de validación. Despliegue: Expansión comercial + estabilización.</div>
+      </div>
+      <div class="chips">
+        <span class="chip purple">Anderson</span>
+        <span class="chip purple">Felipe</span>
+        <span class="chip purple">Daniel</span>
+        <span class="chip purple">LT (Jaiver)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 18 -->
+  <div class="row">
+    <div class="left-pill">
+      <div class="sprint-pill purple">Sprint 18</div>
+      <div class="date">Enero 2026</div>
+    </div>
+    <div class="card tint-purple">
+      <div class="main">
+        <div class="icons"><span class="icon">🏷️</span><span class="icon">📍</span></div>
+        <div class="text">Inicio del configurador de Alias en App. Spikes de Job Sites (Excel + georreferenciación). Ajustes de nomenclatura de notificaciones. Estabilización y automatización.</div>
+      </div>
+      <div class="chips">
+        <span class="chip purple">Anderson</span>
+        <span class="chip purple">Felipe</span>
+        <span class="chip purple">Daniel</span>
+        <span class="chip purple">LT (Jaiver)</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 
     </div>
   </div>
-</div>
-
-<script>
-/* ❄️ Nieve */
-const canvas=document.getElementById("snow");
-const ctx=canvas.getContext("2d");
-let w,h,flakes=[];
-function resize(){
-  w=canvas.width=window.innerWidth;
-  h=canvas.height=window.innerHeight;
-}
-window.addEventListener("resize",resize);
-resize();
-for(let i=0;i<80;i++){
-  flakes.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*2+1,s:Math.random()+0.3});
-}
-function snow(){
-  ctx.clearRect(0,0,w,h);
-  ctx.fillStyle="rgba(255,255,255,0.6)";
-  flakes.forEach(f=>{
-    ctx.beginPath();
-    ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
-    ctx.fill();
-    f.y+=f.s;
-    if(f.y>h){f.y=-5; f.x=Math.random()*w}
-  });
-  requestAnimationFrame(snow);
-}
-snow();
-
-/* 🎮 Juego + 🎉 Confetti */
-const TARGET=12;
-let score=0,time=30,running=false,spawn,timer;
-const game=document.getElementById("game");
-const scoreEl=document.getElementById("score");
-const timeEl=document.getElementById("time");
-const msg=document.getElementById("message");
-const unlockText=document.getElementById("unlockText");
-const messagePanel=document.getElementById("messagePanel");
-
-function spawnBubble(){
-  if(!running) return;
-  const b=document.createElement("div");
-  b.className="bubble";
-  b.textContent="🏅";
-  const r=game.getBoundingClientRect();
-  b.style.left=Math.random()*r.width+"px";
-  b.style.top=(60+Math.random()*(r.height-80))+"px";
-  b.onclick=()=>{
-    b.remove();
-    score++;
-    scoreEl.textContent=score;
-    if(score>=TARGET) win();
-  };
-  game.appendChild(b);
-  setTimeout(()=>b.remove(),1200);
-}
-
-function confetti(){
-  for(let i=0;i<45;i++){
-    const c=document.createElement("div");
-    c.className="confetti";
-    c.style.left=Math.random()*100+"vw";
-    c.style.background=["gold","#34d399","#6ee7ff","#ffffff"][Math.floor(Math.random()*4)];
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),2500);
-  }
-}
-
-function win(){
-  running=false;
-  clearInterval(spawn); clearInterval(timer);
-  unlockText.style.display="block";
-  msg.classList.add("show");
-  confetti();
-  setTimeout(()=>{
-    messagePanel.scrollIntoView({behavior:"smooth", block:"start"});
-  },150);
-}
-
-document.getElementById("start").onclick=()=>{
-  if(running) return;
-  running=true; score=0; time=30;
-  scoreEl.textContent=score;
-  timeEl.textContent=time;
-  msg.classList.remove("show");
-  unlockText.style.display="none";
-  [...game.querySelectorAll(".bubble")].forEach(b=>b.remove());
-  spawn=setInterval(spawnBubble,500);
-  timer=setInterval(()=>{
-    time--; timeEl.textContent=time;
-    if(time<=0){
-      running=false;
-      clearInterval(spawn); clearInterval(timer);
-    }
-  },1000);
-};
-
-document.getElementById("reset").onclick=()=>location.reload();
-</script>
-
 </body>
 </html>
